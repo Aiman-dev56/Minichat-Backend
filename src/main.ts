@@ -10,24 +10,18 @@ dotenv.config();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Enable CORS for any origin (dev) – can be locked down in production via FRONTEND_URL env var
   app.enableCors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   });
 
-  // Global validation pipe
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
-  // Enable Socket.io adapter
   app.useWebSocketAdapter(new IoAdapter(app));
-
-  // Prefix all routes with /api
   app.setGlobalPrefix('api');
 
-  const port = Number(process.env.PORT) || 4000;
-  await app.listen(port);
-  console.log(`🚀 Backend running on http://localhost:${port}`);
+  const port = process.env.PORT || 4000;
+  await app.listen(port, '0.0.0.0');
+  console.log(`Backend running on port ${port}`);
 }
 bootstrap();
