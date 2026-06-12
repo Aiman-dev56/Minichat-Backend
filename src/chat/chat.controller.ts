@@ -8,6 +8,10 @@ export class ChatController {
 
   @UseGuards(JwtAuthGuard)
   @Get('conversation/:userId')
+ test() {
+  return { message: 'Chat API working' };
+}
+  
   async getConversation(@Request() req, @Param('userId') userId: string) {
     const messages = await this.chatService.getConversation(
       req.user.userId,
